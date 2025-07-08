@@ -7,15 +7,27 @@ pending_heart       = {}
 pending_proposal    = {}
 last_itachi_reward  = {}   # ← add this line
 
-
 import os
+import json
 from dotenv import load_dotenv
-
 load_dotenv()
 
+# Load from env vars first
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-ADMIN_IDS = list(map(int, os.getenv("ADMIN_IDS", "").split(",")))
+ADMIN_IDS = os.getenv("ADMIN_IDS")
 RENDER_URL = os.getenv("RENDER_URL")
+
+# Fallback to config.json if missing
+if not BOT_TOKEN or not ADMIN_IDS or not RENDER_URL:
+    with open("config.json", "r") as f:
+        config = json.load(f)
+    BOT_TOKEN = BOT_TOKEN or config.get("BOT_TOKEN")
+    ADMIN_IDS = ADMIN_IDS or ",".join(map(str, config.get("ADMIN_IDS", [])))
+    RENDER_URL = RENDER_URL or config.get("RENDER_URL")
+
+# Convert ADMIN_IDS to list of ints
+ADMIN_IDS = list(map(int, ADMIN_IDS.split(",")))
+
 
 # === Telegram Bot Framework ===
 from telegram import (
