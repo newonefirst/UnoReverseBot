@@ -41,8 +41,7 @@ from telegram.ext import (
 
 from telegram.ext import ApplicationBuilder
 
-application = ApplicationBuilder().token(BOT_TOKEN).build()
-
+app = ApplicationBuilder().token(BOT_TOKEN).build()
 
 from bank_utils import (
     assign_investor_badge,
