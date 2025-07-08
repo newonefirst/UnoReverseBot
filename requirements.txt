@@ -1,1 +1,8 @@
 python-telegram-bot==20.3
+requests
+python-dotenv
+emoji
+sqlite-utils
+Flask              # only if you manually expose HTTP routes
+aiohttp            # for async web support
+pillow             # if you're handling images
