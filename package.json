@@ -1,0 +1,20 @@
+{
+  "name": "shinobi-bot",
+  "version": "1.0.0",
+  "description": "Telegram bot with cards, coins, karma, and duels",
+  "main": "main.py",
+  "scripts": {
+    "start": "./start.sh"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "python",
+    "cards",
+    "karma",
+    "duel",
+    "economy"
+  ],
+  "author": "Ruhvelle",
+  "license": "MIT"
+}
