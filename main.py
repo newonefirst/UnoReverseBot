@@ -1,5 +1,6 @@
 # === System & Core ===
-import logging, json, random, time, sqlite3
+import logging, json, random, time, sqlite3, os
+
 
 # === Ephemeral caches ===
 pending_heart       = {}
