@@ -2294,6 +2294,27 @@ async def deletecardbyindex(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("⚠️ Card not found or deletion failed.")
 
 
+async def deletecardbyindex(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.effective_user.id not in ADMIN_IDS:
+        return await update.message.reply_text("⛔ Only admins can delete cards.")
+
+    if not context.args:
+        return await update.message.reply_text("🗑️ Usage: /deletecardbyindex <card_number>")
+
+    try:
+        index = int(context.args[0]) - 1  # Convert to 0-based index
+    except ValueError:
+        return await update.message.reply_text("🚫 Please enter a valid number.")
+
+    from card_utils import remove_card_by_index
+    name = remove_card_by_index(index)
+
+    if name:
+        await update.message.reply_text(f"✅ Card <b>{name}</b> deleted successfully.", parse_mode="HTML")
+    else:
+        await update.message.reply_text("⚠️ Card not found or deletion failed.")
+
+
 
 async def deletebyname(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id not in ADMIN_IDS:
@@ -2551,6 +2572,7 @@ commands = {
     "deletecard": deletecard,
     "deletebyname": deletebyname,
     "deletecardbyindex": deletecardbyindex,
+    "deletebyindex": deletebyindex,
     "editcard": editcard,
     "adjustcoins": adjustcoins,
     "checkbalance": checkbalance,
@@ -2643,6 +2665,7 @@ app.add_handler(CommandHandler("propose", propose))
 app.add_handler(CallbackQueryHandler(proposal_response_handler, pattern="^proposal_"))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, itachi_listener))
 
+app.add_handler(CommandHandler("deletebyindex", deletebyindex))
 
 # — Register the new help command —
 app.add_handler(CommandHandler("help", help_command))
