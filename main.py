@@ -8,6 +8,15 @@ pending_proposal    = {}
 last_itachi_reward  = {}   # ← add this line
 
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+ADMIN_IDS = list(map(int, os.getenv("ADMIN_IDS", "").split(",")))
+RENDER_URL = os.getenv("RENDER_URL")
+
 # === Telegram Bot Framework ===
 from telegram import (
     Update, InlineKeyboardMarkup, InlineKeyboardButton, InputMediaPhoto
