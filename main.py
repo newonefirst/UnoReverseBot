@@ -2572,7 +2572,6 @@ commands = {
     "deletecard": deletecard,
     "deletebyname": deletebyname,
     "deletecardbyindex": deletecardbyindex,
-    "deletebyindex": deletebyindex,
     "editcard": editcard,
     "adjustcoins": adjustcoins,
     "checkbalance": checkbalance,
