@@ -2320,7 +2320,7 @@ async def view_cards(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(f"⚠️ Failed to fetch cards: {str(e)}")
 
 
-@application.command("deletecardbyindex")
+
 async def delete_card_by_index(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
 
