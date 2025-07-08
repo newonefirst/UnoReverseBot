@@ -2690,6 +2690,9 @@ app.add_handler(ChatMemberHandler(welcome_farewell, ChatMemberHandler.CHAT_MEMBE
 app.add_error_handler(error_handler)
 
 
+with open("config.json", "r") as f:
+    config = json.load(f)
+BOT_TOKEN = config.get("BOT_TOKEN")
 
 import requests
 
