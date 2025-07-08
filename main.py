@@ -2321,7 +2321,7 @@ async def view_cards(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 
-async def delete_card_by_index(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def deletecardbyindex(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
 
     if user_id not in ADMIN_IDS:
