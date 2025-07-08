@@ -2715,26 +2715,8 @@ with open("config.json", "r") as f:
     config = json.load(f)
 BOT_TOKEN = config.get("BOT_TOKEN")
 
-import requests
-
-webhook_url = f"https://unoreversebot.onrender.com/{BOT_TOKEN}"
-response = requests.post(
-    f"https://api.telegram.org/bot{BOT_TOKEN}/setWebhook",
-    data={"url": webhook_url}
-)
-
-if response.status_code == 200:
-    print("✅ Webhook registered with Telegram.")
-else:
-    print("⚠️ Webhook setup failed:", response.text)
-
 if __name__ == "__main__":
-    print("✅ UNO Reverse Bot is running via webhook...")
-    app.run_webhook(
-        listen="0.0.0.0",
-        port=int(os.environ.get("PORT", 8443)),
-        webhook_url=webhook_url
-    )
-
+    print("✅ UNO Reverse Bot is running via polling...")
+    app.run_polling()
 
 
