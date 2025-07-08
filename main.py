@@ -1,6 +1,12 @@
 # === System & Core ===
 import logging, json, random, time, sqlite3, os
 
+import sqlite_utils
+db = sqlite_utils.Database("uno.db")  # or whatever your database filename is
+
+import sqlite3
+conn = sqlite3.connect("uno.db")
+cursor = conn.cursor()
 
 # === Ephemeral caches ===
 pending_heart       = {}
@@ -2300,26 +2306,25 @@ async def deletecard_callback(update: Update, context: ContextTypes.DEFAULT_TYPE
 async def viewcards(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
 
-    # Optional: Only allow admins
     if user_id not in ADMIN_IDS:
         await update.message.reply_text("⛔ You’re not authorized to view cards.")
         return
 
     try:
-        cards = db["cards"].rows
+        cards = list(db["cards"].rows)
         if not cards:
             await update.message.reply_text("📭 No cards available.")
             return
 
         message = "🗂 Available Cards:\n"
         for i, card in enumerate(cards):
-            message += f"{i}. {card['title']} — {card.get('description', 'No description')}\n"
+            title = card.get("title", "Untitled")
+            desc = card.get("description", "No description")
+            message += f"{i}. {title} — {desc}\n"
 
         await update.message.reply_text(message)
     except Exception as e:
         await update.message.reply_text(f"⚠️ Failed to fetch cards: {str(e)}")
-
-
 
 async def deletecardbyindex(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
@@ -2330,17 +2335,25 @@ async def deletecardbyindex(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     try:
         index = int(context.args[0])
-        cards = db["cards"].rows
-        if index >= len(cards) or index < 0:
+        cards = list(db["cards"].rows)
+
+        if index < 0 or index >= len(cards):
             await update.message.reply_text("⚠️ Invalid card index.")
             return
 
         card_to_delete = cards[index]
-        db["cards"].delete(card_to_delete["id"])  # or whatever unique field you use
+        card_id = card_to_delete.get("id")
 
-        await update.message.reply_text(f"🗑 Deleted card: {card_to_delete['title']}")
+        if card_id is None:
+            await update.message.reply_text("❌ Card has no ID, can’t be deleted.")
+            return
+
+        db["cards"].delete(card_id)
+        title = card_to_delete.get("title", "Untitled")
+        await update.message.reply_text(f"🗑 Deleted card: {title}")
     except Exception as e:
         await update.message.reply_text(f"❌ Failed to delete card: {str(e)}")
+
 
 
 
