@@ -2694,4 +2694,10 @@ if __name__ == "__main__":
     print("✅ UNO Reverse Bot is running...")
     app.run_polling()
 
+async def on_shutdown(application):
+    print("👋 Shutdown triggered. Cleaning up…")
+
+app = Application.builder().token(BOT_TOKEN).build()
+app.post_shutdown = on_shutdown
+
 
