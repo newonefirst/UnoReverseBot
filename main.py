@@ -2296,7 +2296,7 @@ async def deletecard_callback(update: Update, context: ContextTypes.DEFAULT_TYPE
         else:
             await query.edit_message_text(f"⚠️ Failed to remove card '<b>{card_name}</b>'. Not found.", parse_mode="HTML")
 
-@application.command("viewcards")
+
 async def view_cards(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
 
