@@ -2664,7 +2664,7 @@ app.add_handler(CommandHandler("propose", propose))
 app.add_handler(CallbackQueryHandler(proposal_response_handler, pattern="^proposal_"))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, itachi_listener))
 
-app.add_handler(CommandHandler("deletebyindex", deletebyindex))
+app.add_handler(CommandHandler("deletecardbyindex", deletecardbyindex))
 
 # — Register the new help command —
 app.add_handler(CommandHandler("help", help_command))
