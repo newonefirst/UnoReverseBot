@@ -2293,48 +2293,51 @@ async def deletecard_callback(update: Update, context: ContextTypes.DEFAULT_TYPE
         else:
             await query.edit_message_text(f"⚠️ Failed to remove card '<b>{card_name}</b>'. Not found.", parse_mode="HTML")
 
+@application.command("viewcards")
+async def view_cards(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
 
-
-async def deletecardbyindex(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.effective_user.id not in ADMIN_IDS:
-        return await update.message.reply_text("⛔ Only admins can delete cards.")
-
-    if not context.args:
-        return await update.message.reply_text("🗑️ Usage: /deletecardbyindex <card_number>")
-
-    try:
-        index = int(context.args[0]) - 1  # Convert to 0-based index
-    except ValueError:
-        return await update.message.reply_text("🚫 Please enter a valid number.")
-
-    from card_utils import remove_card_by_index
-    name = remove_card_by_index(index)
-
-    if name:
-        await update.message.reply_text(f"✅ Card <b>{name}</b> deleted successfully.", parse_mode="HTML")
-    else:
-        await update.message.reply_text("⚠️ Card not found or deletion failed.")
-
-
-async def deletecardbyindex(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.effective_user.id not in ADMIN_IDS:
-        return await update.message.reply_text("⛔ Only admins can delete cards.")
-
-    if not context.args:
-        return await update.message.reply_text("🗑️ Usage: /deletecardbyindex <card_number>")
+    # Optional: Only allow admins
+    if user_id not in ADMIN_IDS:
+        await update.message.reply_text("⛔ You’re not authorized to view cards.")
+        return
 
     try:
-        index = int(context.args[0]) - 1  # Convert to 0-based index
-    except ValueError:
-        return await update.message.reply_text("🚫 Please enter a valid number.")
+        cards = db["cards"].rows
+        if not cards:
+            await update.message.reply_text("📭 No cards available.")
+            return
 
-    from card_utils import remove_card_by_index
-    name = remove_card_by_index(index)
+        message = "🗂 Available Cards:\n"
+        for i, card in enumerate(cards):
+            message += f"{i}. {card['title']} — {card.get('description', 'No description')}\n"
 
-    if name:
-        await update.message.reply_text(f"✅ Card <b>{name}</b> deleted successfully.", parse_mode="HTML")
-    else:
-        await update.message.reply_text("⚠️ Card not found or deletion failed.")
+        await update.message.reply_text(message)
+    except Exception as e:
+        await update.message.reply_text(f"⚠️ Failed to fetch cards: {str(e)}")
+
+
+@application.command("deletecardbyindex")
+async def delete_card_by_index(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+
+    if user_id not in ADMIN_IDS:
+        await update.message.reply_text("🚫 Only admins can delete cards.")
+        return
+
+    try:
+        index = int(context.args[0])
+        cards = db["cards"].rows
+        if index >= len(cards) or index < 0:
+            await update.message.reply_text("⚠️ Invalid card index.")
+            return
+
+        card_to_delete = cards[index]
+        db["cards"].delete(card_to_delete["id"])  # or whatever unique field you use
+
+        await update.message.reply_text(f"🗑 Deleted card: {card_to_delete['title']}")
+    except Exception as e:
+        await update.message.reply_text(f"❌ Failed to delete card: {str(e)}")
 
 
 
