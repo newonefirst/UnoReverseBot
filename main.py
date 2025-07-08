@@ -39,6 +39,10 @@ from telegram.ext import (
     CallbackQueryHandler, ChatMemberHandler, ContextTypes, filters
 )
 
+from telegram.ext import ApplicationBuilder
+
+application = ApplicationBuilder().token(BOT_TOKEN).build()
+
 
 from bank_utils import (
     assign_investor_badge,
@@ -2669,7 +2673,8 @@ commands = {
     "shinobiblessingvault": shinobiblessingvault,
     "shinobilegacy": shinobilegacy,
     "sendheart": sendheart,
-    "debugvault": debugvault
+    "debugvault": debugvault,
+    "viewcards": viewcards,
    
 
 
@@ -2678,6 +2683,7 @@ commands = {
 # === Register Commands ===
 for cmd, func in commands.items():
     app.add_handler(CommandHandler(cmd, func))
+@application.command("viewcards")
 
 # === Button & Callback Handlers ===
 app.add_handler(CallbackQueryHandler(heart_confirm_handler, pattern="^heart_"))
